@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Knjige</string>
+    <string name="book_title">Ime knjige</string>
+    <string name="search_by_title">Pretrazuj po naslovu</string>
+</resources>
