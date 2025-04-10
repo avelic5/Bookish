@@ -1,4 +1,6 @@
-package com.example.bookish
+package com.example.bookish.data
+
+import com.example.bookish.model.Book
 
 object BookStaticData {
 

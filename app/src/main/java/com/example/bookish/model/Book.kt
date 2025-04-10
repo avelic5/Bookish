@@ -1,4 +1,4 @@
-package com.example.bookish
+package com.example.bookish.model
 
 data class Book(
     val title: String,
