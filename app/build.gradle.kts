@@ -43,8 +43,14 @@ android {
 }
 
 dependencies {
-
+    implementation(platform("androidx.compose:compose-bom:2024.03.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.03.00"))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.4.0") // ili najnovija verzija
     implementation(libs.androidx.core.ktx)
+    // Dodaj ove zavisnosti za testiranje
+    testImplementation("junit:junit:4.13.2") // Za JUnit 4
+    androidTestImplementation("androidx.test.ext:junit:1.1.5") // Android JUnit Extensions
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.7.8") // Jetpack Compose JUnit Test
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -52,7 +58,18 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.test:rules:1.6.1")
 
+    // (Opcionalno) UI testiranje sa Espresso
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.6.1")
+
+    // (Opcionalno) Testiranje Jetpack Compose UI-a
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.7.8")
+
+    // Hamcrest
+    testImplementation("org.hamcrest:hamcrest:2.2")
 
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
@@ -64,4 +81,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    testImplementation(kotlin("test"))
 }
