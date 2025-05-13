@@ -64,5 +64,6 @@ class MainActivity : ComponentActivity() {
             BookishTheme {
                 BookishNavGraph(startText = sharedText)
             }
-        }  }
+        }
+    }
 }

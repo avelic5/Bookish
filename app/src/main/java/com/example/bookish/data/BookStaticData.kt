@@ -4,7 +4,7 @@ import com.example.bookish.model.Book
 
 object BookStaticData {
 
-    fun getSampleBooks(): List<Book> {
+   /* fun getSampleBooks(): List<Book> {
         return listOf(
             Book(
                 title = "The Great Gatsby",
@@ -55,5 +55,5 @@ object BookStaticData {
                 description = "A novel about the serious issues of rape and racial inequality, told through the eyes of a child in the American South."
             )
         )
-    }
+    }*/
 }
