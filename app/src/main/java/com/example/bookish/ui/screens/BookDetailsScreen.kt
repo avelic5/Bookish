@@ -26,21 +26,27 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-
 import com.example.bookish.model.Book
-import com.example.bookish.R
 import com.example.bookish.repositories.BookRepository
-
+import com.example.bookish.R
 @Composable
 fun BookDetailsScreen(id: String, onBack: () -> Unit) {
     val context = LocalContext.current
     var book by remember { mutableStateOf<Book?>(null) }
     var isLoading by remember { mutableStateOf(true) }
+    var error by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(id) {
         isLoading = true
-        book = BookRepository.getBookById(id)
-        isLoading = false
+        error = null
+        try {
+            book = BookRepository.getBookById(id)
+            if (book == null) error = "Book not found."
+        } catch (e: Exception) {
+            error = "Error loading book."
+        } finally {
+            isLoading = false
+        }
     }
 
     Column(
@@ -49,19 +55,15 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp)
-
     ) {
-        if (isLoading) {
-            CircularProgressIndicator()
-        } else {
-            book?.let {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(it.thumbnail)
-                        .crossfade(true)
-                        .build(),
-                    placeholder = painterResource(R.drawable.books),
-                    error = painterResource(R.drawable.books),
+        Button(onClick = onBack) { Text("Back") }
+        when {
+            isLoading -> CircularProgressIndicator()
+            error != null -> Text(error ?: "Unknown error", color = Color.Red)
+            book != null -> {
+                val it = book!!
+                Image(
+                    painter = painterResource(id = com.example.bookish.R.drawable.books),
                     contentDescription = "Book cover",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -69,72 +71,64 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
                         .fillMaxWidth()
                 )
                 Text(
-                    text = it.title,
+                    text = it.title ?: "Unknown Title",
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
-                            try {
-                                val query = "${it.title} ${it.authors.joinToString(" ")}"
-                                val intent = Intent(Intent.ACTION_WEB_SEARCH).apply {
-                                    putExtra(SearchManager.QUERY, query)
-                                }
-                                context.startActivity(intent)
-                            } catch (e: ActivityNotFoundException) {
-                                e.printStackTrace()
+                        .clickable(enabled = !it.title.isNullOrBlank()) {
+                            val query = "${it.title.orEmpty()} ${it.authors?.joinToString(" ").orEmpty()}"
+                            if (query.isNotBlank()) {
+                                try {
+                                    val intent = Intent(Intent.ACTION_WEB_SEARCH).apply {
+                                        putExtra(SearchManager.QUERY, query)
+                                    }
+                                    context.startActivity(intent)
+                                } catch (_: Exception) {}
                             }
                         },
                     textAlign = TextAlign.Center
                 )
-
                 Text(
-                    "Authors: ${it.authors.joinToString(", ")}",
+                    "Authors: ${it.authors?.joinToString(", ") ?: "Unknown"}",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Text("Publisher: ${it.publisher}", style = MaterialTheme.typography.bodyMedium)
+                Text("Publisher: ${it.publisher ?: "Unknown"}", style = MaterialTheme.typography.bodyMedium)
                 Text(
-                    "Categories: ${it.categories.joinToString(", ")}",
+                    "Categories: ${it.categories?.joinToString(", ") ?: "Unknown"}",
                     style = MaterialTheme.typography.bodyMedium
                 )
-
                 Text(
-                    text = it.infoLink,
+                    text = it.infoLink ?: "No Info Link",
                     color = Color.Blue,
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.clickable {
-                        try {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it.infoLink))
-                            context.startActivity(intent)
-                        } catch (e: ActivityNotFoundException) {
-                            e.printStackTrace()
+                    modifier = Modifier.clickable(enabled = !it.infoLink.isNullOrBlank()) {
+                        val link = it.infoLink
+                        if (!link.isNullOrBlank()) {
+                            try {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+                                context.startActivity(intent)
+                            } catch (_: Exception) {}
                         }
                     }
                 )
-
                 Text(
-                    text = it.description,
+                    text = it.description ?: "No Description",
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.clickable {
-                        try {
-                            val intent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TEXT, it.description)
-                                type = "text/plain"
-                            }
-                            context.startActivity(Intent.createChooser(intent, "Share via"))
-                        } catch (e: ActivityNotFoundException) {
-                            e.printStackTrace()
+                    modifier = Modifier.clickable(enabled = !it.description.isNullOrBlank()) {
+                        val desc = it.description
+                        if (!desc.isNullOrBlank()) {
+                            try {
+                                val intent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TEXT, desc)
+                                    type = "text/plain"
+                                }
+                                context.startActivity(Intent.createChooser(intent, "Share via"))
+                            } catch (_: Exception) {}
                         }
                     }
                 )
-            } ?: Text("Greška: Knjiga nije pronađena.")
-
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { onBack() }) {
-            Text("Back")
+            }
         }
     }
 }
-
-

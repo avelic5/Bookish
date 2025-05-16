@@ -1,5 +1,7 @@
 package com.example.bookish.repositories
 
+import com.example.bookish.data.RetrofitInstance
+import com.example.bookish.dto.toBook
 import com.example.bookish.model.Book
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,20 +11,6 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 object BookRepository {
-
-    // Suspendirana funkcija koja izvršava mrežni poziv u IO thread-u
-    suspend fun searchBooks(query: String): List<Book> = withContext(Dispatchers.IO) {
-        val apiUrl = "https://www.googleapis.com/books/v1/volumes?q=${query}"
-        val url = URL(apiUrl)
-
-        // Otvaranje konekcije
-        val connection = url.openConnection() as? HttpURLConnection
-        val response = connection?.inputStream?.bufferedReader()?.use { it.readText() }
-        connection?.disconnect()
-
-        // Parsiranje odgovora ako postoji
-        response?.let { parseBooksFromJson(it) } ?: emptyList()
-    }
 
     // Funkcija za parsiranje JSON odgovora u listu Book objekata
     private fun parseBooksFromJson(json: String): List<Book> {
@@ -52,31 +40,15 @@ object BookRepository {
         }
     }
     suspend fun getBookById(id: String): Book? = withContext(Dispatchers.IO) {
-        val url = URL("https://www.googleapis.com/books/v1/volumes/$id")
-        val connection = url.openConnection() as? HttpURLConnection
-        val response = connection?.inputStream?.bufferedReader()?.use { it.readText() }
-        connection?.disconnect()
+        val response = api.searchBooks("id:$id")
+        response.items.firstOrNull { it.id == id }?.toBook()
+    }
 
-        response?.let {
-            val item = JSONObject(it)
-            val volumeInfo = item.getJSONObject("volumeInfo")
-            val imageLinks = volumeInfo.optJSONObject("imageLinks")
+    private val api = RetrofitInstance.api
 
-            Book(
-                id = id,
-                title = volumeInfo.optString("title", "N/A"),
-                authors = volumeInfo.optJSONArray("authors")?.let { arr ->
-                    List(arr.length()) { j -> arr.getString(j) }
-                } ?: listOf("Unknown"),
-                publisher = volumeInfo.optString("publisher", "Unknown"),
-                categories = volumeInfo.optJSONArray("categories")?.let { arr ->
-                    List(arr.length()) { j -> arr.getString(j) }
-                } ?: listOf("Uncategorized"),
-                infoLink = volumeInfo.optString("infoLink", ""),
-                description = volumeInfo.optString("description", "No description"),
-                thumbnail = imageLinks?.optString("thumbnail", "")
-            )
-        }
+    suspend fun searchBooks(query: String): List<Book> = withContext(Dispatchers.IO) {
+        val response = api.searchBooks(query)
+        response.items.map { it.toBook() }.take(10)
     }
 
 }

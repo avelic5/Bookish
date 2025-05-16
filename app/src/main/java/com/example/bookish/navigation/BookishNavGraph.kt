@@ -17,9 +17,19 @@ fun BookishNavGraph(startText: String? = null) {
         composable("home") {
             HomeScreen(navController, initialSearch = startText ?: "")
         }
-        composable("details/{id}") { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id") ?: ""
-            BookDetailsScreen(id = id, onBack = { navController.popBackStack() })
+        composable(
+            route = "bookDetails/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            if (id != null) {
+                BookDetailsScreen(
+                    id = id,
+                    onBack = { navController.popBackStack() }
+                )
+            } else {
+                Text("Error: Book ID is missing.")
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 package com.example.bookish.ui.screens
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material3.*
@@ -8,11 +7,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-
-import com.example.bookish.data.BookStaticData
 import com.example.bookish.model.Book
-import com.example.bookish.repositories.BookRepository
 
+import com.example.bookish.repositories.BookRepository
 import com.example.bookish.ui.components.BookCard
 import kotlinx.coroutines.launch
 

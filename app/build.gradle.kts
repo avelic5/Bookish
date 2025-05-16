@@ -56,7 +56,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-
+    implementation("com.squareup.retrofit2:retrofit:+")
+    implementation("com.squareup.retrofit2:converter-gson:+")
     // --- Navigacija ---
     implementation("androidx.navigation:navigation-compose:2.7.7") // Provjerite da li postoji novija stabilna verzija (npr. 2.8.x)
 
