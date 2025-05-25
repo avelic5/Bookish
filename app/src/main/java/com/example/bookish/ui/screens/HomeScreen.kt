@@ -21,6 +21,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
     val booksList = remember { mutableStateListOf<Book>() }
     var searchQuery by remember { mutableStateOf(initialSearch) }
     var isLoading by remember { mutableStateOf(false) }
+    var saveMessage by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -31,6 +32,14 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
             val saved = BookRepository.getAllBooksFromDatabase()
             booksList.addAll(saved)
             isLoading = false
+        }
+    }
+
+    fun saveBook(book: Book) {
+        scope.launch {
+            BookRepository.saveToLocal(book)
+            saveMessage = "Book saved successfully!"
+            loadSavedBooks()
         }
     }
 
@@ -95,6 +104,16 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                 }
             }
 
+            if (saveMessage != null) {
+                Text(
+                    text = saveMessage!!,
+                    color = androidx.compose.ui.graphics.Color.Green,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                )
+            }
+
             if (isLoading) {
                 Box(
                     modifier = Modifier
@@ -122,12 +141,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                         .weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.homescreenpicture),
-                        contentDescription = "Home Screen Picture",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
+                    Text("No books saved yet.", style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }

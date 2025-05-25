@@ -39,13 +39,16 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
     var book by remember { mutableStateOf<Book?>(null) }
     var isLoading by remember { mutableStateOf(true) }
     var isRemoving by remember { mutableStateOf(false) }
-
+    var isSaved by remember { mutableStateOf(false) }
     LaunchedEffect(id) {
-        isLoading = true
-        book = BookRepository.getBookById(id)
-        isLoading = false
+        val fetchedBook = BookRepository.getBookById(id)
+        book = fetchedBook
+        if (fetchedBook != null) {
+            BookRepository.saveToLocal(fetchedBook)
+            isSaved = true
+        }
+        isLoading = false // <-- Add this line
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
