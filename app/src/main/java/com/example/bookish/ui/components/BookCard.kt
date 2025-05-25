@@ -1,6 +1,7 @@
 package com.example.bookish.ui.components
 
 
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 import com.example.bookish.R
+
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -34,7 +36,7 @@ fun BookCard(book: Book, onClick: () -> Unit) {
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(book.thumbnail)
+                    .data(book.book.thumbnail)
                     .crossfade(true)
                     .build(),
                 placeholder = painterResource(R.drawable.books),
@@ -47,7 +49,7 @@ fun BookCard(book: Book, onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = book.title,
+                text = book.book.title,
                 style = MaterialTheme.typography.titleSmall,
                 maxLines = 2,
                 textAlign = TextAlign.Center

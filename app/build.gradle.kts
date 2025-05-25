@@ -2,15 +2,16 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp")
 }
 
 android {
     namespace = "com.example.bookish"
-    compileSdk = 35 // Keep user's input. Latest stable Android SDK is typically 34.
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.bookish"
-        minSdk = 33 // minSdk 33 je prilično visoka, ograničava broj podržanih uređaja.
+        minSdk = 33
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -43,12 +44,12 @@ android {
 }
 
 dependencies {
-    // --- Compose BOM i osnovne AndroidX zavisnosti ---
-    // Koristite samo jedan Compose BOM za upravljanje verzijama Compose biblioteka.
-    // Pretpostavlja se da libs.androidx.compose.bom u libs.versions.toml pokazuje na "2024.03.00" ili noviju verziju.
+
     implementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(platform(libs.androidx.compose.bom)) // BOM za instrumentirane testove
-
+    implementation("androidx.room:room-runtime:2.7.1")
+    ksp("androidx.room:room-compiler:2.7.1")
+     annotationProcessor("androidx.room:room-compiler:2.7.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

@@ -1,6 +1,10 @@
 package com.example.bookish.dto
 
+
+import com.example.bookish.model.Author
 import com.example.bookish.model.Book
+import com.example.bookish.model.BookEntity
+import com.example.bookish.model.Category
 import com.google.gson.annotations.SerializedName
 
 data class BookResponse(
@@ -27,14 +31,21 @@ data class ImageLinks(
 )
 
 fun BookItem.toBook(): Book {
-    return Book(
+    val bookEntity = BookEntity(
         id = this.id,
         title = volumeInfo.title ?: "N/A",
-        authors = volumeInfo.authors ?: listOf("Unknown"),
         publisher = volumeInfo.publisher ?: "Unknown",
-        categories = volumeInfo.categories ?: listOf("Uncategorized"),
         infoLink = volumeInfo.infoLink ?: "",
         description = volumeInfo.description ?: "No description",
         thumbnail = volumeInfo.imageLinks?.thumbnail ?: ""
+    )
+
+    val authorsList = volumeInfo.authors?.map { Author(name = it) } ?: listOf(Author(name = "Unknown"))
+    val categoriesList = volumeInfo.categories?.map { Category(name = it) } ?: listOf(Category(name = "Uncategorized"))
+
+    return Book(
+        book = bookEntity,
+        authors = authorsList,
+        categories = categoriesList
     )
 }

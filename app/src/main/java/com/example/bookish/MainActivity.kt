@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.sp
 import com.example.bookish.data.BookStaticData
 import com.example.bookish.model.Book
 import com.example.bookish.navigation.BookishNavGraph
+import com.example.bookish.repositories.BookRepository
 import com.example.bookish.ui.theme.BookishTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +62,9 @@ class MainActivity : ComponentActivity() {
         val sharedText = intent?.getStringExtra(Intent.EXTRA_TEXT)
 
         setContent {
+
             BookishTheme {
+                BookRepository.init(this)
                 BookishNavGraph(startText = sharedText)
             }
         }

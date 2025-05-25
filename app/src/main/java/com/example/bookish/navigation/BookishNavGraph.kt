@@ -4,8 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.*
-import com.example.bookish.data.BookStaticData
-import com.example.bookish.model.Book
+
 import com.example.bookish.ui.screens.BookDetailsScreen
 import com.example.bookish.ui.screens.HomeScreen
 
@@ -17,19 +16,9 @@ fun BookishNavGraph(startText: String? = null) {
         composable("home") {
             HomeScreen(navController, initialSearch = startText ?: "")
         }
-        composable(
-            route = "bookDetails/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id")
-            if (id != null) {
-                BookDetailsScreen(
-                    id = id,
-                    onBack = { navController.popBackStack() }
-                )
-            } else {
-                Text("Error: Book ID is missing.")
-            }
+        composable("details/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id") ?: ""
+            BookDetailsScreen(id = id, onBack = { navController.popBackStack() })
         }
     }
 }
