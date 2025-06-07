@@ -5,10 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.bookish.model.Author
+import com.example.bookish.model.Book
 import com.example.bookish.model.BookAuthorCrossRef
 import com.example.bookish.model.BookCategoryCrossRef
 import com.example.bookish.model.BookEntity
 import com.example.bookish.model.Category
+
 
 @Database(
     entities = [
@@ -33,6 +35,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "bookish_database"
                 ).build().also { INSTANCE = it }
-            }  }
+            }
+        }
     }
 }

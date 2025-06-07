@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -18,40 +19,34 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(navController: NavController, initialSearch: String = "") {
+    val context = LocalContext.current
+    val repository = remember { BookRepository(context) }
     val booksList = remember { mutableStateListOf<Book>() }
     var searchQuery by remember { mutableStateOf(initialSearch) }
     var isLoading by remember { mutableStateOf(false) }
-    var saveMessage by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    fun loadSavedBooks() {
-        isLoading = true
-        booksList.clear()
-        scope.launch {
-            val saved = BookRepository.getAllBooksFromDatabase()
-            booksList.addAll(saved)
-            isLoading = false
-        }
-    }
 
-    fun saveBook(book: Book) {
-        scope.launch {
-            BookRepository.saveToLocal(book)
-            saveMessage = "Book saved successfully!"
-            loadSavedBooks()
-        }
-    }
 
     LaunchedEffect(initialSearch) {
-        if (initialSearch.isNotBlank()) {
+        if (initialSearch.isBlank()) {
             isLoading = true
-            val result = BookRepository.searchBooks(initialSearch)
+            val localBooks = repository.loadBooksFromContentProvider(context)
             booksList.clear()
-            booksList.addAll(result)
+            booksList.addAll(localBooks)
             isLoading = false
-        } else {
-            loadSavedBooks()
+
+            if (localBooks.isEmpty()) {
+                snackbarHostState.showSnackbar("There are no local books.")
+            }
+        }
+        else{
+            isLoading = true
+            val books = repository.searchBooks(initialSearch)
+            booksList.clear()
+            booksList.addAll(books)
+            isLoading = false
         }
     }
 
@@ -64,84 +59,58 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                 .padding(16.dp)
                 .padding(innerPadding)
         ) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                elevation = CardDefaults.cardElevation(6.dp)
+
+            // UI dio za unos pretrage
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    TextField(
-                        value = searchQuery,
-                        onValueChange = {
-                            searchQuery = it
-                            if (it.isBlank()) loadSavedBooks()
-                        },
-                        label = { Text("Search by title") },
-                        modifier = Modifier.weight(1f)
-                    )
-                    Button(onClick = {
-                        if (searchQuery.isNotBlank()) {
-                            isLoading = true
-                            booksList.clear()
-                            scope.launch {
-                                val result = BookRepository.searchBooks(searchQuery)
-                                booksList.addAll(result)
-                                isLoading = false
+                TextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    label = { Text("Search by title") },
+                    modifier = Modifier.weight(1f)
+                )
+                Button(onClick = {
+                    scope.launch {
+                        isLoading = true
+                        booksList.clear()
+                        if (searchQuery.isBlank()) {
+                            val local = repository.loadBooksFromContentProvider(context)
+                            booksList.addAll(local)
+                            if (local.isEmpty()) {
+                                snackbarHostState.showSnackbar("There are no local books.")
                             }
                         } else {
-                            loadSavedBooks()
+                            booksList.addAll(repository.searchBooks(searchQuery))
                         }
-                    }) {
-                        Text("Search")
+                        isLoading = false
                     }
+                }) {
+                    Text("Search")
                 }
             }
 
-            if (saveMessage != null) {
-                Text(
-                    text = saveMessage!!,
-                    color = androidx.compose.ui.graphics.Color.Green,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                )
-            }
+            Spacer(modifier = Modifier.height(16.dp))
 
+            // Prikaz loading indikatora
             if (isLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            } else if (booksList.isNotEmpty()) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    items(booksList) { book ->
-                        BookCard(book = book) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            }
+
+            // Prikaz rezultata
+            LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                items(booksList) { book ->
+                    BookCard(book = book) {
+                        scope.launch {
+                            val localBook = repository.getBookByIdFromProvider(book.book.id,context)
+                            if (localBook == null) {
+                                repository.saveToProvider(book,context)
+                                snackbarHostState.showSnackbar("The book is saved to database.")
+                            }
                             navController.navigate("details/${book.book.id}")
                         }
                     }
-                }
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("No books saved yet.", style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }

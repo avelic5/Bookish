@@ -31,6 +31,8 @@ data class ImageLinks(
 )
 
 fun BookItem.toBook(): Book {
+    val volumeInfo = this.volumeInfo
+
     val bookEntity = BookEntity(
         id = this.id,
         title = volumeInfo.title ?: "N/A",
@@ -40,12 +42,12 @@ fun BookItem.toBook(): Book {
         thumbnail = volumeInfo.imageLinks?.thumbnail ?: ""
     )
 
-    val authorsList = volumeInfo.authors?.map { Author(name = it) } ?: listOf(Author(name = "Unknown"))
-    val categoriesList = volumeInfo.categories?.map { Category(name = it) } ?: listOf(Category(name = "Uncategorized"))
+    val authors = volumeInfo.authors?.map { name -> Author(name = name) } ?: listOf(Author(name = "Unknown"))
+    val categories = volumeInfo.categories?.map { name -> Category(name = name) } ?: listOf()
 
     return Book(
         book = bookEntity,
-        authors = authorsList,
-        categories = categoriesList
+        authors = authors,
+        categories = categories
     )
 }

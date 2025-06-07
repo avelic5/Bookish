@@ -55,7 +55,7 @@ fun BookCard(book: Book, onClick: () -> Unit) {
                 textAlign = TextAlign.Center
             )
             Text(
-                text = book.authors.joinToString(", "),
+                text = book.authors.joinToString { a -> a.name },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary
             )

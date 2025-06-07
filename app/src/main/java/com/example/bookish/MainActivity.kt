@@ -62,9 +62,7 @@ class MainActivity : ComponentActivity() {
         val sharedText = intent?.getStringExtra(Intent.EXTRA_TEXT)
 
         setContent {
-
             BookishTheme {
-                BookRepository.init(this)
                 BookishNavGraph(startText = sharedText)
             }
         }

@@ -30,6 +30,18 @@ interface BookDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBookCategoryCrossRefs(refs: List<BookCategoryCrossRef>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAuthor(author: Author)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCategory(category: Category)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBookAuthorCrossRef(ref: BookAuthorCrossRef)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBookCategoryCrossRef(ref: BookCategoryCrossRef)
+
     @Transaction
     @Query("SELECT * FROM books WHERE id = :id")
     suspend fun getBookWithRelations(id: String): Book?
@@ -38,9 +50,15 @@ interface BookDao {
     @Query("SELECT * FROM books")
     suspend fun getAllBooksWithRelations(): List<Book>
 
+    @Query("SELECT * FROM books WHERE id = :id")
+    suspend fun getBookEntityById(id: String): BookEntity?
+
     @Delete
     suspend fun deleteBook(book: BookEntity)
 
-    @Query("DELETE FROM books WHERE id = :id")
-    suspend fun deleteBookById(id: String)
+    @Query("DELETE FROM BookAuthorCrossRef WHERE bookId = :bookId")
+    suspend fun deleteAuthorCrossRefs(bookId: String)
+
+    @Query("DELETE FROM BookCategoryCrossRef WHERE bookId = :bookId")
+    suspend fun deleteCategoryCrossRefs(bookId: String)
 }

@@ -6,102 +6,72 @@ import com.example.bookish.model.Author
 import com.example.bookish.model.Category
 
 object BookStaticData {
-
-    fun getSampleBooks(): List<Book> {
-        return listOf(
-            Book(
-                book = BookEntity(
-                    id = "1",
+    /*
+        fun getSampleBooks(): List<Book> {
+            return listOf(
+                Book(
+                    id= "1",
                     title = "The Great Gatsby",
+                    authors = listOf("F. Scott Fitzgerald"),
                     publisher = "Scribner",
+                    categories = listOf("Fiction", "Classic"),
                     infoLink = "https://books.google.ba/books/about/The_Great_Gatsby.html?id=iXn5U2IzVH0C&redir_esc=y",
                     description = "A novel set in the Jazz Age that tells the story of the mysterious millionaire Jay Gatsby and his obsession with Daisy Buchanan.",
-                    thumbnail = ""
+                    thumbnail = null
+
                 ),
-                authors = listOf(Author(name = "F. Scott Fitzgerald")),
-                categories = listOf(
-                    Category(name = "Fiction"),
-                    Category(name = "Classic")
-                )
-            ),
-            Book(
-                book = BookEntity(
-                    id = "2",
+                Book(
+                    id="2",
                     title = "1984",
+                    authors = listOf("George Orwell"),
                     publisher = "Secker & Warburg",
+                    categories = listOf("Dystopian", "Science Fiction"),
                     infoLink = "https://books.google.ba/books/about/1984.html?id=kotPYEqx7kMC&redir_esc=y",
                     description = "A dystopian novel about a totalitarian regime that employs surveillance and propaganda to oppress its citizens.",
-                    thumbnail = ""
+                    thumbnail = null
                 ),
-                authors = listOf(Author(name = "George Orwell")),
-                categories = listOf(
-                    Category(name = "Dystopian"),
-                    Category(name = "Science Fiction")
-                )
-            ),
-            Book(
-                book = BookEntity(
-                    id = "3",
+                Book(
+                    id="3",
                     title = "Clean Code",
+                    authors = listOf("Robert C. Martin"),
                     publisher = "Prentice Hall",
+                    categories = listOf("Programming", "Software Engineering"),
                     infoLink = "https://www.google.ba/books/edition/Clean_Code/_i6bDeoCQzsC?hl=en",
                     description = "A handbook of agile software craftsmanship, teaching the principles of writing clean and maintainable code.",
-                    thumbnail = ""
+                    thumbnail = null
                 ),
-                authors = listOf(Author(name = "Robert C. Martin")),
-                categories = listOf(
-                    Category(name = "Programming"),
-                    Category(name = "Software Engineering")
-                )
-            ),
-            Book(
-                book = BookEntity(
-                    id = "4",
+                Book(
+                    id="4",
                     title = "Pride and Prejudice",
+                    authors = listOf("Jane Austen"),
                     publisher = "T. Egerton, Whitehall",
+                    categories = listOf("Romance", "Classic"),
                     infoLink = "https://books.google.ba/books/about/Pride_and_Prejudice.html?id=s1gVAAAAYAAJ&redir_esc=y",
                     description = "A romantic novel that also critiques the British landed gentry at the end of the 18th century.",
-                    thumbnail = ""
+                    thumbnail = null
                 ),
-                authors = listOf(Author(name = "Jane Austen")),
-                categories = listOf(
-                    Category(name = "Romance"),
-                    Category(name = "Classic")
-                )
-            ),
-            Book(
-                book = BookEntity(
-                    id = "5",
+                Book(
+                    id="5",
                     title = "The Pragmatic Programmer",
+                    authors = listOf("Andrew Hunt", "David Thomas"),
                     publisher = "Addison-Wesley",
+                    categories = listOf("Programming", "Technology"),
                     infoLink = "https://books.google.ba/books/about/The_Pragmatic_Programmer.html?id=5wBQEp6ruIAC&redir_esc=y",
                     description = "A guide for software developers that offers practical advice on software construction and career development.",
-                    thumbnail = ""
+                    thumbnail = null
                 ),
-                authors = listOf(
-                    Author(name = "Andrew Hunt"),
-                    Author(name = "David Thomas")
-                ),
-                categories = listOf(
-                    Category(name = "Programming"),
-                    Category(name = "Technology")
-                )
-            ),
-            Book(
-                book = BookEntity(
-                    id = "6",
+                Book(
+                    id="6",
                     title = "To Kill a Mockingbird",
+                    authors = listOf("Harper Lee"),
                     publisher = "J.B. Lippincott & Co.",
+                    categories = listOf("Fiction", "Social Justice"),
                     infoLink = "https://books.google.ba/books/about/To_Kill_a_Mockingbird.html?id=0NEbHGREK7cC&redir_esc=y",
                     description = "A novel about the serious issues of rape and racial inequality, told through the eyes of a child in the American South.",
-                    thumbnail = ""
-                ),
-                authors = listOf(Author(name = "Harper Lee")),
-                categories = listOf(
-                    Category(name = "Fiction"),
-                    Category(name = "Social Justice")
+                    thumbnail = null
                 )
             )
-        )
-    }
+        }
+
+     */
 }
