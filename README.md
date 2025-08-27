@@ -56,6 +56,4 @@
 <br/>
 <img width="370" height="828" alt="Screenshot 3" src="https://github.com/user-attachments/assets/3901275d-3a2e-410e-b77e-8c4b80544cf2" />
 
----
 
-Let me know if you want a version in Bosnian or want to include any specific screenshot links or Git instructions.
