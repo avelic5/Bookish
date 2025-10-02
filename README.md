@@ -6,13 +6,13 @@
 
 ## ✨ Features
 
-- 🔍 **Search Books Online**: Search by title using Google Books API.  
-- 📥 **Save Books Locally**: Store selected books in a local SQLite database.  
-- 🧾 **View Book Details**: View title, authors, publisher, description, categories, and thumbnail image.  
-- 🗃️ **Content Provider Integration**: Enables accessing book data through a `ContentProvider`.  
-- 📂 **Filter Local Data**: If the search field is empty, local data is displayed instead of fetching online.  
-- 🗑️ **Remove Books**: Delete saved books directly from the local database.  
-- 🎨 **Modern UI**: Built with Jetpack Compose and Material3 design system.  
+-  **Search Books Online**: Search by title using Google Books API.  
+-  **Save Books Locally**: Store selected books in a local SQLite database.  
+-  **View Book Details**: View title, authors, publisher, description, categories, and thumbnail image.  
+-  **Content Provider Integration**: Enables accessing book data through a `ContentProvider`.  
+-  **Filter Local Data**: If the search field is empty, local data is displayed instead of fetching online.  
+-  **Remove Books**: Delete saved books directly from the local database.  
+-  **Modern UI**: Built with Jetpack Compose and Material3 design system.  
 
 ---
 
